@@ -2,8 +2,8 @@
 <MotoPlusProject>
   <ProjectName>pymotoplus</ProjectName>
   <FilesInProject>
-    <FileForProject>motoudp.h</FileForProject>
     <FileForProject>motoudp.c</FileForProject>
+    <FileForProject>motoudp.h</FileForProject>
     <FileForProject>mpMain.c</FileForProject>
   </FilesInProject>
   <LastFileOpened>motoudp.h</LastFileOpened>
