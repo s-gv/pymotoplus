@@ -36,6 +36,10 @@ def wait(log=True, terminal_print=True):
             print(txt)
             raise ValueError(txt)
 
+def to_json(txt):
+    json_txt = '{"' + txt[1:].strip().replace(': ', '": ').replace(', ', ', "') + '}'
+    data = json.loads(json_txt)
+    return data
 
 def initForceMeasure(f_avg_time=10):
     send(f':A {f_avg_time}')
@@ -90,14 +94,19 @@ def measureMotoFitData(terminal_print=False):
     endImpControl()
     send(':F')
     txt = wait(terminal_print=terminal_print)
-    json_txt = '{"' + txt[1:].strip().replace(': ', '": ').replace(', ', ', "') + '}'
-    data = json.loads(json_txt)
+    data = to_json(txt)
     if data['rx'] > 0: data['rx'] -= 360*10000
     return data
 
 def setVar(var_type='B', idx=0, val=0, terminal_print=False):
     send(f':V {var_type} {idx} {val}')
     wait(terminal_print=terminal_print)
+
+def getVar(var_type='B', idx=0, terminal_print=False):
+    send(f':G {var_type} {idx}')
+    txt = wait(terminal_print=terminal_print)
+    data = to_json(txt)
+    return data
 
 def startJob(job_name='TIMER', terminal_print=False):
     send(f':P {job_name}')

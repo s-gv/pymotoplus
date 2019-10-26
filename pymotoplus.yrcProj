@@ -6,7 +6,7 @@
     <FileForProject>motoudp.h</FileForProject>
     <FileForProject>mpMain.c</FileForProject>
   </FilesInProject>
-  <LastFileOpened>motoudp.h</LastFileOpened>
+  <LastFileOpened>mpMain.c</LastFileOpened>
   <UsrInit>False</UsrInit>
   <ProjectType>Executable</ProjectType>
   <Debug>

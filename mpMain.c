@@ -16,6 +16,7 @@ void measureForcePosition(); // E
 void measureMotoFitData(); // F
 void moveL(long px, long py, long pz, long rx, long ry, long rz, int v); // L
 void setVar(char varType, unsigned short idx, unsigned long val); // V
+void getVar(char varType, unsigned short idx); // G
 void startJob(char *jobName); // P
 
 int nTaskID1;
@@ -107,6 +108,13 @@ void udpCallback(char* buf, int buf_len)
             setVar(varType, idx, val);
             mpUDPPrintf(":SetVar varType = %c, idx = %d, val = %lu", varType, idx, val);
         }
+        if(buf[0] == ':' && buf[1] == 'G') {
+            char varType;
+            int idx;
+            sscanf(buf, ":G %c %d", &varType, &idx);
+
+            getVar(varType, idx);
+        }
         if(buf[0] == ':' && buf[1] == 'Z') {
         	mpUDPPrintf(":Z No action taken\n");
         }
@@ -115,6 +123,38 @@ void udpCallback(char* buf, int buf_len)
     mpStopWatchDelete(stopWatchID);
     stopWatchID = mpStopWatchCreate(0);
     mpStopWatchStart(stopWatchID);
+}
+
+void getVar(char varType, unsigned short idx)
+{
+	MP_VAR_INFO sData;
+
+    if(varType == 'b' || varType == 'B') {
+        sData.usType = MP_RESTYPE_VAR_B;
+    }
+    else if(varType == 'i' || varType == 'I') {
+        sData.usType = MP_RESTYPE_VAR_I;
+    }
+    else if(varType == 'd' || varType == 'D') {
+        sData.usType = MP_RESTYPE_VAR_D;
+    }
+    else if(varType == 'r' || varType == 'R') {
+        sData.usType = MP_RESTYPE_VAR_R;
+    }
+    else {
+        mpUDPPrintf("! mpGetVarData() var type (%c) not recognized\n", varType);
+        return;
+    }
+    sData.usIndex = idx;
+    long rData;
+
+    int rc = mpGetVarData(&sData, &rData, 1);
+
+    if(rc != 0) {
+        mpUDPPrintf("! mpGetVarData() returned %d\n", rc);
+        return;
+    }
+    mpUDPPrintf(":varVal: %ld\n", rData);
 }
 
 void setVar(char varType, unsigned short idx, unsigned long val)
