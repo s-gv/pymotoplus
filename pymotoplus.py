@@ -70,7 +70,7 @@ def setForce(fx=0, fy=0, fz=-10, frx=0, fry=0, frz=0, terminal_print=False):
     wait(terminal_print=terminal_print)
 
 def moveL(px=454*1000, py=12*1000, pz=-221*1000, rx=180*10000, ry=0, rz=0, v=500, terminal_print=False):
-    send(f':L {px} {py} {pz} {rx} {ry} {rz} {v}')
+    send(f':L {int(px)} {int(py)} {int(pz)} {int(rx)} {int(ry)} {int(rz)} {int(v)}')
     wait(terminal_print=terminal_print)
 
 def measureForcePosition(terminal_print=False):
@@ -113,7 +113,8 @@ def startJob(job_name='TIMER', terminal_print=False):
     wait(terminal_print=terminal_print)
 
 def startBgJob(terminal_print=False):
-    startJob('TIMER', terminal_print=terminal_print)
+    time.sleep(0.5)
+    startJob('BG', terminal_print=terminal_print)
 
 def endBgJob(terminal_print=False):
     setVar('B', 0, 0, terminal_print=terminal_print)
