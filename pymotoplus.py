@@ -69,6 +69,10 @@ def setForce(fx=0, fy=0, fz=-10, frx=0, fry=0, frz=0, terminal_print=False):
     send(f':D {fx} {fy} {fz} {frx} {fry} {frz}')
     wait(terminal_print=terminal_print)
 
+def setTool(robot_no=0, tool_no=0):
+    send(f':T {robot_no} {tool_no}')
+    wait(terminal_print=terminal_print)
+
 def moveL(px=454*1000, py=12*1000, pz=-221*1000, rx=180*10000, ry=0, rz=0, v=500, terminal_print=False):
     send(f':L {int(px)} {int(py)} {int(pz)} {int(rx)} {int(ry)} {int(rz)} {int(v)}')
     wait(terminal_print=terminal_print)

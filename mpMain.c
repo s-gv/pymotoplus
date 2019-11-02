@@ -14,6 +14,7 @@ void endImpControl(); // C
 void setForce(int fx, int fy, int fz, int frx, int fry, int frz); // D
 void measureForcePosition(); // E
 void measureMotoFitData(); // F
+void setTool(int robotNo, int toolNo); // T
 void moveL(long px, long py, long pz, long rx, long ry, long rz, int v); // L
 void setVar(char varType, unsigned short idx, unsigned long val); // V
 void getVar(char varType, unsigned short idx); // G
@@ -86,6 +87,13 @@ void udpCallback(char* buf, int buf_len)
             moveL(px, py, pz, rx, ry, rz, v);
             mpUDPPrintf(":MoveL px = %ld, py = %ld, pz = %ld, rx = %ld, ry = %ld, rz = %ld, v = %d\n", px, py, pz, rx, ry, rz, v);
         }
+        if(buf[0] == ':' && buf[1] == 'T') {
+            int robotNo, toolNo;
+            sscanf(buf, ":T %d %d", &robotNo, &toolNo);
+            
+            setTool(robotNo, toolNo);
+            mpUDPPrintf(":SetTool robotNo = %d, toolNo = %d\n", robotNo, toolNo);
+        }
         if(buf[0] == ':' && buf[1] == 'E') {
             measureForcePosition();
         }
@@ -123,6 +131,23 @@ void udpCallback(char* buf, int buf_len)
     mpStopWatchDelete(stopWatchID);
     stopWatchID = mpStopWatchCreate(0);
     mpStopWatchStart(stopWatchID);
+}
+
+void setTool(int robotNo, int toolNo)
+{
+	int rc;
+	
+	MP_SET_TOOL_NO_SEND_DATA sData;
+	MP_STD_RSP_DATA rData;
+	
+	sData.sRobotNo = robotNo;
+	sData.sToolNo = toolNo;
+	
+	rc = mpSetToolNo(&sData, &rData);
+	if(rc != 0) {
+		mpUDPPrintf("! mpSetToolNo() returned %d\n", rc);
+        return;
+	}
 }
 
 void getVar(char varType, unsigned short idx)
